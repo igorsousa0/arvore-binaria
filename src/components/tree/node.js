@@ -1,27 +1,22 @@
 export default class Node {
-    constructor(key, parent=null) {
-        this.key = key;
-        this.parent = parent;
-        this.leftChild = null;
-        this.rightChild = null;
+    constructor(key, parent = null) {
+        this.key = key
+        this.leftChild = null
+        this.rightChild = null
+        this.parent = parent
     }
 
-    isLeaf() {
-        return (this.leftChild == null && this.rightChild == null)
+    isRoot() {
+        return this.parent == null
     }
 
-    hasBothChildren() {
-        return (this.leftChild !== null && this.rightChild !== null)
+    depth() {
+        if (this.isRoot()) {
+            return 0
+        } 
+        return 1 + this.parent.depth()
     }
 
-    isLeftChild() {
-        return this.parent > this.key
-    }
-
-    isRightChild() {
-        return this.parent < this.key
-    }
-    
     hasLeftChild() {
         return this.leftChild !== null
     }
@@ -30,12 +25,34 @@ export default class Node {
         return this.rightChild !== null
     }
 
-    isRoot() {
-        return this.parent == null
+    isLeaf() {
+        return !this.leftChild && !this.rightChild
     }
 
-    depth() {
-        if(this.isRoot()) return 0
-        return 1 + this.parent.depth()
+    isLeftChild() {
+        return this.parent.leftChild === this
+    }
+
+    isRightChild() {
+        return this.parent.rightChild === this
+    }
+
+    hasBothChildren() {
+        return this.leftChild && this.rightChild
+    }
+
+    height() {
+        if (this.isLeaf()) {
+            return 0;
+        } else {
+            if (this.hasBothChildren()) {
+                return Math.max(this.leftChild.height(), 
+                                this.rightChild.height()) + 1
+            } else if (this.hasLeftChild()) {
+                return this.leftChild.height() + 1
+            } else {
+                return this.rightChild.height() + 1
+            }
+        }
     }
 }
